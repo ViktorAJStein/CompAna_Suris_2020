@@ -1,0 +1,500 @@
+\ProvidesPackage{skript}
+\usepackage{amsmath,amsfonts,cancel,mathtools} % durchstreichen
+\usepackage{framed,mathabx,array,amssymb}
+\usepackage{enumitem} % einfacher Nummerierung verändern
+\usepackage{tikz} % zeichnen
+\usetikzlibrary{cd,angles,arrows,calc,quotes,patterns,hobby,calc,arrows.meta,positioning} % kommutierende Diagramme u.v.m.
+\usepackage{pstricks-add}
+\usepackage{pgfplots}
+\pgfplotsset{compat = 1.16}
+\usepackage{marginnote} % Ränder beschreiben (Datum und Stichwörter)
+\usepackage[tikz]{bclogo} % Kästen für Erinnerung etc.
+\usepackage{babel} % neue Rechtschreibung, Worttrennung
+\usepackage[utf8]{inputenc} % Inputencoding
+\usepackage[T1]{fontenc} % Umlaute
+\usepackage[final]{pdfpages} % include pdfs
+
+
+\usepackage{sidenotes} % for marginfigures
+\usepackage[strict]{changepage} % braucht man für sidenotes.
+ 
+\usepackage{float} % für die H-Option bei figures
+\usepackage{centernot} % für durchgestrichene Pfeile
+
+\usepackage{cases} % numbering / referencing of cases separately
+
+%new borders
+\usepackage[headheight=2.6pt, 
+            includehead,
+            includefoot,
+            top = 1cm,
+            bottom = 2cm,
+            left = 3cm,
+            right = 7cm]{geometry}
+
+\usepackage{parskip} % for advanced margins
+
+\setlength{\marginparsep}{10mm} % Abstand zwischen Text und Randnotizen
+\setlength{\marginparwidth}{55mm} % Breite des Randnotizen-Bereichs
+
+
+\linespread{1.2} %1.2-facher Zeilenabstand
+\setlength{\parindent}{0pt} %bei neuem Absatz nicht einrücken
+\setlength{\parskip}{0.5em} %Ein bisschen Platz nach Absatz
+
+\setkeys{Gin}{width = \marginparwidth} % macht automatisch width = \marginparwidth wenn nicht anders vorgeschrieben
+
+
+\newcommand{\figref}[1]{\figurename~\ref{#1}} % for \figref
+%header  % TODO: revise weil nicht mehr twoside option!!
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\scshape\nouppercase{{\rightmark}}}
+\rfoot{\subsectionmark} % funktioniert nicht :((
+\lfoot{\thepage}
+\renewcommand{\headrulewidth}{1pt}
+\setlength\headheight{25pt}
+
+
+\usepackage{bm} % bold math
+\usepackage[scr=boondoxo]{mathalfa}
+%\usepackage{fixltx2e}% for \textsubscript
+
+\usepackage{graphicx}
+\graphicspath{ {./pics/} }
+\addto\captionsenglish{\renewcommand{\figurename}{Fig.}}
+\usepackage{animate} % für Animationen
+
+\usepackage{caption} % für captions
+\usepackage{microtype} % wofür?
+
+
+%%%%%TOC%%%%%%%
+%When switching to book class:
+% https://tex.stackexchange.com/questions/439926/different-style-for-backmatter-chapters-in-toc
+  
+\setcounter{tocdepth}{2} % es werden keine subsubsections im toc aufgelistet
+%\addtocontents{toc}{~\hfill\textbf{Seite}\par} % "Seite" über Seitenzahlen im TOC
+
+%%%%%%toc formatting
+\usepackage{titletoc}
+\contentsmargin{0cm}
+
+\titlecontents{section}[0pc]
+{\addvspace{30pt}}%
+{\begin{tikzpicture}[remember picture, overlay]%
+\draw[fill=mycol\thecontentslabel!50!white,draw=mycol\thecontentslabel] (-4,-.2) rectangle (-0.5,.5);%
+\pgftext[left,x=-1.1cm,y=0.2cm]{\color{white}\Large\sc\bfseries \thecontentslabel};%
+\end{tikzpicture}\color{black}\Large\sc\bfseries}
+{\color{black}\large\sc\bfseries}
+{\color{black}\;\titlerule\;\large\sc\bfseries Page \thecontentspage
+\begin{tikzpicture}[remember picture, overlay]
+\draw[fill=doc!25,draw=mycol\thecontentslabel] (2pt,0) rectangle (6,0.1pt);
+\end{tikzpicture}}%
+
+\titlecontents{subsection}[2.4pc]
+{\addvspace{1pt}}
+{\contentslabel[\thecontentslabel]{2.4pc}}
+{}
+{\dotfill\small \thecontentspage}
+[]
+\titlecontents{subsubsection}[5pc]
+{\addvspace{1pt}}
+{\contentslabel[\thecontentslabel]{2.4pc}}
+{}
+{\dotfill\small \thecontentspage}
+[]
+\makeatletter
+
+\renewcommand{\tableofcontents}{%
+\section*{%
+\vspace*{-20\p@}%
+\begin{tikzpicture}[remember picture, overlay]%
+\pgftext[right,x=15cm,y=0.2cm]{\color{mycol1}\Huge\sc\bfseries    
+\contentsname};%
+\draw[fill=mycol1,draw=mycol1] (13,-.75) rectangle (20,1);%
+\clip (13,-.75) rectangle (20,1);
+\pgftext[right,x=15cm,y=0.2cm]{\color{white}\Huge\sc\bfseries 
+\contentsname};%
+\end{tikzpicture}}%
+\@starttoc{toc}}
+\makeatother
+
+%%%
+
+
+\newcommand{\emphi}[1]{\index{#1}\textcolor{mycol\number\value{section}}{\textbf{\normalfont{#1}}}\marginnote{\textcolor{mycol\number\value{section}}{#1}}} % hervorheben und in den Index und in die margin schreiben
+\renewcommand{\emph}[1]{\textcolor{mycol\number\value{section}}{#1}}
+
+\newcommand{\emphii}[1]{\textcolor{mycol\number\value{section}}{\textbf{\normalfont{#1}}}\marginnote{\textcolor{mycol\number\value{section}}{#1}}} % hervorheben und in die margin schreiben
+
+
+\newcommand{\datum}[1]{\marginnote{\textcolor{mycol\number\value{section}}{\textbf{#1}}}}
+\setenumerate[0]{label=\protect\circled{\arabic*}}
+
+%links
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+
+%newcommands
+\DeclareMathOperator{\rank}{rang} % Rang
+\DeclareMathOperator{\Span}{span} % Span
+\DeclareMathOperator{\Ker}{Ker} % Kern
+\DeclareMathOperator{\im}{Im} % Bild
+\DeclareMathOperator{\re}{Re} % Realteil
+\DeclareMathOperator{\id}{id} % Die Identität
+\DeclareMathOperator{\GL}{GL} % the general linear group
+\DeclareMathOperator{\PGL}{PGL} % the projective general linear group
+\DeclareMathOperator{\Aut}{Aut} % conformal automorphisms
+
+\DeclareMathOperator{\sgn}{sgn} % Das Vorzeichen
+\DeclareMathOperator{\Moeb}{\text{Möb}} % Möbiustransformationen
+
+\DeclareMathOperator{\diag}{diag} % Die Diagonaleintr?ge
+\renewcommand*{\t}{^{\mkern-1.5mu\mathsf{T}}} % transpose
+\renewcommand{\phi}{\varphi}
+\newcommand{\eps}{\varepsilon}
+\renewcommand{\S}{\mathbb{S}} % unit circle
+\DeclareMathOperator{\D}{\mathbb{D}} % open unit disk
+\renewcommand{\ang}{\measuredangle} % oriented angle
+\newcommand{\sph}{\sphericalangle} % oriented angle
+
+
+% shortcuts for variables
+\DeclareMathOperator{\A}{\mathcal{A}} % Die Basis A
+\DeclareMathOperator{\B}{\mathcal{B}} % Die Basis B
+\DeclareMathOperator{\C}{\mathcal{C}} % Die Menge der stetigen Abbildungen
+\DeclareMathOperator{\R}{\mathbb{R}} % Der Körper der reellen Zahlen
+\DeclareMathOperator{\Q}{\mathbb{Q}} % Die rationalen Zahlen
+\DeclareMathOperator{\N}{\mathbb{N}} % Der kommutative Halbring der natürlichen Zahlen
+\DeclareMathOperator{\K}{\mathbb{K}} % Kompakta
+\DeclareMathOperator{\Z}{\mathbb{Z}} % kommutativen unitären Ring der ganzen Zahlen
+\DeclareMathOperator{\lsk}{\langle} %Skalarprodukt
+\DeclareMathOperator{\rsk}{\rangle} % \ldots
+\DeclareMathOperator{\PC}{\mathcal{PC}} % piecewise continous(ly differentiable)
+\DeclareMathOperator{\sech}{sech} % secant hyperbolicus
+\DeclareMathOperator{\SO}{SO} % spoecial orthogonal
+\renewcommand{\O}{O} % orthogonal
+\DeclareMathOperator{\diam}{diam} % diameter
+\DeclareMathOperator*{\res}{res} % residue
+
+
+\usepackage{dsfont} % f?r Symbol f?r konstante Einsfunktion 
+
+\DeclareMathOperator{\1}{\mathds{1}}
+\DeclareMathOperator{\CC}{\mathbb{C}}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\Def}{\text{Def.}}
+\DeclareMathOperator{\conv}{conv} % convex hull
+
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil} % use like this: \ceil[\big]{x}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}% einfacher Ab- und aufgerunded
+
+% correct (straight) differentials
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand*\Diff[1]{\mathop{}\!\mathrm{d^#1}}
+\DeclareMathOperator{\CS}{\overset{\textrm{CS}}{\le}}
+\DeclareMathOperator{\te}{\overset{\Delta \ne}{\le}}
+\DeclareMathOperator{\ran}{ran} % range, e.g. image
+\renewcommand*{\t}{^{\mkern-1.5mu\mathsf{T}}}
+\newcommand{\h}{\mathsf{H}}
+\newcommand{\RR}{\mathscr{R}}
+
+
+
+\pdfbookmark[1]{Table of Contents}{toc} % von Robert
+
+\DeclareMathOperator{\I}{\mathcal{I}} % Intervall
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\NN}{\mathcal{N}} % Niveaumenge
+\renewcommand{\H}{\mathbb{H}} % Hilbertraum
+\DeclareMathOperator{\M}{\mathcal{M}} % 
+\DeclareMathOperator{\loc}{loc} % 
+\DeclareMathOperator{\U}{\mathcal{U}} %f
+\DeclareMathOperator{\W}{\mathcal{W}} %
+\DeclareMathOperator{\grad}{grad} % gradient
+\renewcommand{\div}{\text{div}} % divergence
+\DeclareMathOperator{\tr}{tr} % trace operator
+\DeclareMathOperator{\Tr}{Tr} % Trace
+\DeclareMathOperator{\F}{\mathcal{F}} %
+\DeclareMathOperator{\T}{\mathscr{T}} %
+
+\DeclareMathOperator{\asta}{\textrm{\textasteriskcentered}}
+\usepackage{stackengine}
+\newcommand{\weakstar}{\mathrel{\ensurestackMath{\stackon[1pt]{\rightharpoonup}{\scriptsize{\ast}}}}}
+
+\DeclareMathOperator{\sym}{sym} % Symmetrische Matrizen
+\DeclareMathOperator{\V}{\mathcal{V}}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}} % Wahrscheinlichkeitsmaße
+\DeclareMathOperator{\vol}{vol} % Volume
+\DeclareMathOperator{\LO}{L^{\infty}_{\text{w}*}(\Omega; \M(\R))} % abkürzungen
+\DeclareMathOperator{\L1}{L^{1}(\Omega; \C_0(\R))}
+
+
+
+%%%%%%%%%%%%%%%%%%Theoreme%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[thmmarks,framed,thref,hyperref,amsmath]{ntheorem} % [thmmarks] guarantees endmarks
+
+%theorem
+\usepackage[many]{tcolorbox}
+\tcbuselibrary{theorems}
+\newtcbtheorem[number within=subsection,list inside={thm}]{thm}{Theorem} 
+	{{colback=mycol\number\value{section}!5},
+	{colframe=mycol\number\value{section}!95!black},
+	fonttitle=\scshape\bfseries,
+	breakable, enhanced, % multipage, no line on page bottom
+	before skip=15pt plus 2pt,after skip=15pt plus 2pt}{th}
+	
+
+\newcounter{dummy} 
+\numberwithin{dummy}{subsection}
+
+
+% not so important defn
+\theoremstyle{break}
+\theoremprework{\medbreak}
+\theorempostwork{\medbreak}
+\theorembodyfont{\normalfont}
+\theoremheaderfont{\bfseries\scshape} 
+\theoremnumbering{arabic} %  for arabic counter
+\newframedtheorem{defnA}[dummy]{Definition}
+
+
+% defn
+\theoremstyle{break}
+\theoremprework{\medbreak}
+\theorempostwork{\medbreak}
+\theorembodyfont{\normalfont}
+\theoremheaderfont{\bfseries\scshape} 
+\def\theoremframecommand{\colorbox{mycol\number\value{section}!10}}
+\theoremnumbering{arabic} %  for arabic counter
+\newshadedtheorem{defn}[dummy]{Definition}
+\newframedtheorem{altdef}[dummy]{Alternative Definition}
+
+
+%lemma
+\theoremstyle{break}
+\theoremprework{%
+\def\FrameCommand{
+	{\color{mycol\number\value{section}}{\hspace{-8pt}\vrule width 2pt \hspace{6pt}}}}
+\medbreak}
+\theorempostwork{\medbreak}
+\theorembodyfont{\itshape}
+\theoremheaderfont{\normalfont\bfseries} 
+\newframedtheorem{lemma}[dummy]{Lemma}
+
+%  corollary
+\theoremstyle{break}
+\theorembodyfont{\itshape}
+\theoremprework{\medbreak}
+\theorempostwork{\medbreak}
+\theoremheaderfont{\normalfont\bfseries} 
+%\theoremindent0.3cm
+\newtheorem{cor}[dummy]{Corollary}
+
+% proof
+\theoremstyle{plain}
+\theoremheaderfont{\normalfont\bfseries} 
+\theoremprework{\medbreak}
+\theorempostwork{\medbreak}
+\theoremindent0mm
+\theoremsymbol{\ensuremath{\Box}}
+\theoremseparator{}
+\theorembodyfont{\normalfont}
+\newtheorem*{pr}{Proof.}
+\newtheorem*{altbew}{Alternatve proof.}
+
+% examples 
+\theoremstyle{plain}
+\theoremsymbol{$\diamond$}
+\theoremprework{\medbreak}
+\theorempostwork{\medbreak}
+\newtheorem{example}[dummy]{Example}
+\newtheorem{cexample}[dummy]{Counterexample}
+
+% remarks
+\theoremsymbol{}
+\theoremstyle{plain}
+\theoremprework{\medbreak}
+\theorempostwork{\medbreak}
+\newtheorem*{remarkN}{Remark}
+\newtheorem{remark}[dummy]{Remark}
+\newtheorem{remarks}[dummy]{Remarks}
+
+% remark with break
+\theoremstyle{break}
+\theoremprework{\medbreak}
+\theorempostwork{\medbreak}
+\newtheorem{remarkB}[dummy]{Remark}
+
+% example with break
+\theoremstyle{break}
+\theoremsymbol{$\diamond$}
+\theoremprework{\medbreak}
+\theorempostwork{\medbreak}
+\newtheorem{exampleB}[dummy]{Example}
+\newtheorem{cexampleB}[dummy]{Counterexample}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{mycol}{HTML}{000000}
+\definecolor{mycol0}{HTML}{016FB9}
+\definecolor{mycol1}{HTML}{a82337}
+\definecolor{mycol2}{HTML}{016FB9}
+\definecolor{mycol3}{HTML}{BF7F00}
+\definecolor{mycol4}{HTML}{603C96}
+\definecolor{mycol5}{HTML}{006D5B}
+\definecolor{mycol6}{HTML}{43B3AE}
+\definecolor{mycol7}{HTML}{FFB300}
+\definecolor{mycol8}{HTML}{a82337}
+\definecolor{mycol9}{HTML}{016FB9}
+\definecolor{mycol10}{HTML}{BF7F00}
+\definecolor{mycol11}{HTML}{603C96}
+\definecolor{mycol12}{HTML}{006D5B}
+\definecolor{mycol13}{HTML}{43B3AE}
+\definecolor{mycol14}{HTML}{FFB300}
+% formatting
+\usepackage[explicit]{titlesec}
+
+
+
+\titleformat{\section}
+{\normalfont\LARGE\bfseries\raggedright}
+{\llap{\colorbox{mycol\number\value{section}}{\makebox[3em][r]{\textcolor{white}{\thesection}}}\hspace{1em}}}
+{0pt}
+{#1}
+
+\titleformat{\subsection}{
+\normalfont\Large\bfseries}{}{0pt}{\colorbox{mycol\number\value{section}!10}{\parbox{0.965\textwidth}{\thesubsection \ #1}}
+}
+
+\titleformat{\subsubsection}{
+\normalfont\large\bfseries\raggedright}{}{0pt}{\colorbox{mycol\number\value{section}!5}{#1}
+}
+
+
+\titleformat{\part}
+[display]
+{\centering\normalfont\Huge\bfseries}
+{\titlerule[5pt]\vspace{3pt}\titlerule[2pt]\vspace{3pt}\MakeUppercase{\partname} \thepart}
+{0pt}
+%{\titlerule[2pt]\vspace{1pc}\huge\MakeUppercase}
+{#1}
+%
+\titlespacing*{\part}{0pt}{0pt}{20pt}
+
+\newcommand{\partbreak}{\clearpage}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{%
+            \node[shape=circle,fill={mycol\number\value{section}!40},draw,inner sep=1.3pt] (char) {#1};}}
+
+
+
+
+\definecolor{grey}{rgb}{0.23, 0.3, 0.3}
+\definecolor{hyperblue}{HTML}{0000FF}
+
+\hypersetup{
+    colorlinks = true,
+    citecolor = black,
+    filecolor = black,
+    linkcolor = grey,
+    urlcolor = grey,
+    linkbordercolor = red, % underline color
+    breaklinks = true, %allow links to break over lines
+    pdfhighlight = /O,
+    %bookmarks=true,
+    linktocpage=true % only pages are links, not titles in TOC, LOF etc
+}
+
+\usepackage{etoolbox}
+
+\newenvironment{mybclogo}[1]{%
+    \begin{bclogo}[logo = \bclampe, couleur=mycol\number\value{section}!10,arrondi=0.1, couleurBarre= mycol\number\value{section}!10,noborder=true,ombre=true]{#1}
+}{
+    \end{bclogo}
+}
+
+\newenvironment{notation}[1]{%
+    \begin{bclogo}[logo = \bccrayon, couleur=mycol\number\value{section}!10,arrondi=0.1, couleurBarre= mycol\number\value{section}!10,noborder=true,ombre=true]{#1}
+}{
+    \end{bclogo}
+}
+
+\newenvironment{generalization}[1]{%
+    \begin{bclogo}[logo = \bcloupe, marge=0, noborder = true]{#1}
+}{
+    \end{bclogo}
+}
+
+\newenvironment{further}[1]{%
+    \begin{bclogo}[logo = \bcbook, marge=0, noborder = true, barre = none]{#1}
+}{
+    \end{bclogo}
+}
+
+\usepackage{pgfornament} % fancy ornaments 
+
+\newcommand{\ornamentSep}[1]{
+\noindent{}{\hspace{0.25\textwidth}\pgfornament[width=0.5\textwidth,color= #1]{88}}
+} 
+\usepackage{lettrine} % for calligraphic first letter
+\newcommand{\hformbar}[1]{\vspace{5pt}\hrule\vspace{10pt}} 
+
+\usepackage{tocloft} %% for LOF
+\setlength{\cftfignumwidth}{2em}
+
+
+%%% Title page decoration
+\definecolor{titlepagecolor}{RGB}{181, 42, 40} 
+\definecolor{doc}{RGB}{181, 42, 40} % TU RED
+
+\newcommand\titlepagedecoration{%
+\begin{tikzpicture}[remember picture,overlay,shorten >= -10pt]
+
+\coordinate (aux1) at ([yshift=-15pt]current page.north east);
+\coordinate (aux2) at ([yshift=-410pt]current page.north east);
+\coordinate (aux3) at ([xshift=-4.5cm]current page.north east);
+\coordinate (aux4) at ([yshift=-150pt]current page.north east);
+
+\begin{scope}[titlepagecolor!40,line width=12pt,rounded corners=12pt]
+\draw
+  (aux1) -- coordinate (a)
+  ++(225:5) --
+  ++(-45:5.1) coordinate (b);
+\draw[shorten <= -10pt]
+  (aux3) --
+  (a) --
+  (aux1);
+\draw[opacity=0.6,titlepagecolor,shorten <= -10pt]
+  (b) --
+  ++(225:2.2) --
+  ++(-45:2.2);
+\end{scope}
+\draw[titlepagecolor,line width=8pt,rounded corners=8pt,shorten <= -10pt]
+  (aux4) --
+  ++(225:0.8) --
+  ++(-45:0.8);
+\begin{scope}[titlepagecolor!70,line width=6pt,rounded corners=8pt]
+\draw[shorten <= -10pt]
+  (aux2) --
+  ++(225:3) coordinate[pos=0.45] (c) --
+  ++(-45:3.1);
+\draw
+  (aux2) --
+  (c) --
+  ++(135:2.5) --
+  ++(45:2.5) --
+  ++(-45:2.5) coordinate[pos=0.3] (d);   
+\draw 
+  (d) -- +(45:1);
+\end{scope}
+\end{tikzpicture}%
+}
